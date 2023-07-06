@@ -6,13 +6,13 @@ let nextUniqueID = 1 // concept borrowed from org.postgresql.core.v3.QueryExecut
 interface BatchQueryConfig {
   name?: string
   text: string
-  values: string[][]
+  values: string[][] | string[][][]
 }
 
 class BatchQuery<T extends QueryResultRow> implements Submittable {
   private name: string | null
   private text: string
-  private values: string[][]
+  private values: string[][] | string[][][]
   private connection: Connection | null
   private _portal: string | null
   private _result: typeof Result | null

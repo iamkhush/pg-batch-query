@@ -61,8 +61,8 @@ describe('batch query', function () {
     const responses = await this.client.query(new BatchQuery({
       text: `SELECT * from foo where name = ANY($1)`,
       values: [
-        ['first', 'third'],
-        ['second', 'fourth']
+        [['first', 'third']],
+        [['second', 'fourth']]
       ],
       name: 'optional'
   })).execute()
