@@ -25,7 +25,7 @@ describe('BatchQuery error handling', function () {
         try {
             await this.client.query(batch).execute()
         } catch (e) {
-            assert.equal(e.message, 'relation "foo" does not exist')
+            assert.strictEqual(e.message, 'relation "foo" does not exist')
         }
         await this.client.query('Select now()')
     })
@@ -44,10 +44,10 @@ describe('BatchQuery error handling', function () {
         try {
             await this.client.query(batch).execute()
         } catch (e) {
-            assert.equal(e.message, 'invalid input syntax for integer: "xxx"')
+            assert.strictEqual(e.message, 'invalid input syntax for integer: "xxx"')
         }
         const response = await this.client.query('Select sum(value) from foo')
-        assert.equal(response.rows[0]['sum'], null)
+        assert.strictEqual(response.rows[0]['sum'], null)
     })
 
     it('handles error in select batch query', async function (){
@@ -64,7 +64,7 @@ describe('BatchQuery error handling', function () {
         try {
             await this.client.query(batch).execute()
         } catch (e) {
-            assert.equal(e.message, 'invalid input syntax for integer: "xxx"')
+            assert.strictEqual(e.message, 'invalid input syntax for integer: "xxx"')
         }
     })
 })

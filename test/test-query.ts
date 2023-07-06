@@ -66,7 +66,7 @@ describe('batch query', function () {
       ],
       name: 'optional'
   })).execute()
-  assert.equal(responses.length, 2)
+  assert.strictEqual(responses.length, 2)
   for ( const response of responses) {
     assert.strictEqual(response.rowCount, 1)
   }})
