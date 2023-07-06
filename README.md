@@ -1,4 +1,4 @@
-# pg-batch-query
+# pg-batch-query ![](https://github.com/iamkhush/pg-batch-query/actions/workflows/ci.yml/badge.svg)
 
 Batches queries by using the [Extended query protocol](https://www.postgresql.org/docs/current/protocol-flow.html#PROTOCOL-FLOW-EXT-QUERY).
 Essentially we do the following
@@ -48,7 +48,7 @@ I'm very open to contribution! Open a pull request with your code or idea and we
 
 ## license
 
-The GPL V3
+GPL V3
 
 Copyright (c) 2023 Ankush Chadda
 
