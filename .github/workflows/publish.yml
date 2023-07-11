@@ -1,0 +1,63 @@
+name: Publish Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  strategy: 
+    matrix:
+      node: ['14', '16', '18']
+      os: [ubuntu-latest, windows-latest, macos-latest]
+  build:
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ci_db_test
+          POSTGRES_HOST_AUTH_METHOD: 'md5'
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    name: Node.js ${{ matrix.node }} (${{ matrix.os }})
+    env:
+        PGUSER: postgres
+        PGHOST: localhost
+        PGPASSWORD: postgres
+        PGDATABASE: ci_db_test
+        PGTESTNOSSL: 'true'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn test
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: yarn
+          registry-url: https://registry.npmjs.org/
+      - run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: yarn
+          registry-url: https://npm.pkg.github.com
+      # - run: yarn publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.  }}
