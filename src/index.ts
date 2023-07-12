@@ -10,14 +10,14 @@ interface BatchQueryConfig {
 }
 
 class BatchQuery<T extends QueryResultRow> implements Submittable {
-  private name: string | null
-  private text: string
-  private values: string[][] | string[][][]
-  private connection: Connection | null
-  private _portal: string | null
-  private _result: typeof Result | null
-  private _results: typeof Result[]
-  private callback: null | ((err: Error | null, rows: QueryResult<T>[] | null) => void)
+  name: string | null
+  text: string
+  values: string[][] | string[][][]
+  connection: Connection | null
+  _portal: string | null
+  _result: typeof Result | null
+  _results: typeof Result[]
+  callback: null | ((err: Error | null, rows: QueryResult<T>[] | null) => void)
 
   constructor(batchQuery: BatchQueryConfig) {
     const { name, values, text } = batchQuery
