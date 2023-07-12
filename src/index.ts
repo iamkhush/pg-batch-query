@@ -114,14 +114,14 @@ class BatchQuery<T extends QueryResultRow> implements Submittable {
     this._result.addRow(row)
   }
 
-  private handleCommandComplete(msg: any) {
+  handleCommandComplete(msg: any) {
     this._result.addCommandComplete(msg)
     this._results.push(this._result)
     this._result = new Result()
     this.connection?.close({ type: 'P', name: this._portal ?? '' }, true)
   }
 
-  private handleEmptyQuery() {
+  handleEmptyQuery() {
     this.connection?.sync()
   }
 }
