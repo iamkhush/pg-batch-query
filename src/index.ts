@@ -87,14 +87,14 @@ class BatchQuery<T extends QueryResultRow> implements Submittable {
     })
   }
 
-  private handleError(err: Error) {
+  handleError(err: Error) {
     this.connection?.flush()
     if (this.callback) {
       this.callback(err, null)
     }
   }
 
-  private handleReadyForQuery() {
+  handleReadyForQuery() {
     if (this.callback) {
       // eslint-disable-next-line no-useless-catch
       try {
@@ -105,11 +105,11 @@ class BatchQuery<T extends QueryResultRow> implements Submittable {
     }
   }
 
-  private handleRowDescription(msg: any) {
+  handleRowDescription(msg: any) {
     this._result?.addFields(msg.fields)
   }
 
-  private handleDataRow(msg: any) {
+  handleDataRow(msg: any) {
     const row = this._result.parseRow(msg.fields)
     this._result.addRow(row)
   }
