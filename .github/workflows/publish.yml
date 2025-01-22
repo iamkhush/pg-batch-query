@@ -1,4 +1,7 @@
 name: Publish Package
+permissions:
+  contents: read
+  pull-requests: write
 
 on:
   release:
@@ -20,7 +23,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     strategy: 
       matrix:
-        node: ['14', '16', '18']
+        node: ['18', '20', '22', '24']
     name: Node.js ${{ matrix.node }}
     env:
         PGUSER: postgres
