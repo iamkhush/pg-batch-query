@@ -11,35 +11,60 @@ As [per benchmark tests](./bench.ts), number of queries per seconds gets tripled
 ## installation
 
 ```bash
-$ npm install pg --save
-$ npm install pg-batch-query --save
+$ yarn add pg
+$ yarn add pg-batch-query
 ```
 
-## use
+## Usage
 
-```js
+```javascript
 const pg = require('pg')
-var pool = new pg.Pool()
 const BatchQuery = require('pg-batch-query')
 
-const batch = new BatchQuery({
-  name: 'optional',
-  text: 'SELECT from foo where bar = $1',
-  values: [
-    ['first'],
-    ['second']
-  ]
-})
+const pool = new pg.Pool()
 
-pool.connect((err, client, done) => {
-  if (err) throw err
-  const result = client.query(batch).execute()
-  for (const res of result) {
-    for (const row of res) {
-      console.log(row)
+async function query() {
+  const client = await pool.connect()
+  try {
+    const batch = new BatchQuery({
+      name: 'optional',
+      text: 'SELECT from foo where bar = $1',
+      values: [
+        ['first'],
+        ['second']
+      ]
+    })
+
+    const result = await client.query(batch).execute()
+    for (const res of result) {
+      for (const row of res.rows) {
+        console.log(row)
+      }
     }
+  } finally {
+    client.release()
   }
-})
+}
+
+query().catch(console.error)
+```
+
+## Testing
+
+To run the tests, you will need to create a `.env` file in the root of the project and add the following environment variables:
+
+```
+PGUSER=your_postgres_user
+PGHOST=your_postgres_host
+PGDATABASE=your_postgres_database
+PGPASSWORD=your_postgres_password
+PGPORT=your_postgres_port
+```
+
+Then, you can run the tests using the following command:
+
+```bash
+yarn test
 ```
 
 ## contribution
@@ -48,7 +73,7 @@ I'm very open to contribution! Open a pull request with your code or idea and we
 
 ## license
 
-GPL V3
+MIT
 
 Copyright (c) 2023 Ankush Chadda
 
