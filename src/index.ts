@@ -126,4 +126,4 @@ class BatchQuery<T extends QueryResultRow> implements Submittable {
   }
 }
 
-export = BatchQuery
+export default BatchQuery
