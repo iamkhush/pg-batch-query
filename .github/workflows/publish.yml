@@ -15,7 +15,6 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    needs: ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -26,6 +25,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: yarn install --frozen-lockfile
       - run: yarn build
+      - run: yarn test
       - uses: step-security/wait-for-secrets@v1
         id: wait-for-secrets
         with:
