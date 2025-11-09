@@ -22,32 +22,40 @@ describe('pg-batch-query and pg-query-stream', function () {
 
   it('can be used together to process a stream of data', async function () {
     const queryStream = new QueryStream('SELECT * FROM source_data')
-    const stream = client.query(queryStream)
+    client.query(queryStream)
 
     const batchSize = 10
     let values: string[][] = []
     let executionPromises: Promise<any>[] = []
 
-    for await (const row of stream) {
-      values.push([row.id.toString(), row.name])
-      if (values.length === batchSize) {
-        const batchQuery = new BatchQuery({
-          text: 'INSERT INTO target_data (id, name) VALUES ($1, $2)',
-          values: values,
-        })
-        executionPromises.push(client.query(batchQuery).execute())
-        values = []
-      }
-    }
-
-    // Insert any remaining values
-    if (values.length > 0) {
-      const batchQuery = new BatchQuery({
-        text: 'INSERT INTO target_data (id, name) VALUES ($1, $2)',
-        values: values,
+    await new Promise<void>((resolve, reject) => {
+      queryStream.on('data', (row) => {
+        values.push([row.id.toString(), row.name])
+        if (values.length === batchSize) {
+          const batchQuery = new BatchQuery({
+            text: 'INSERT INTO target_data (id, name) VALUES ($1, $2)',
+            values: values,
+          })
+          executionPromises.push(client.query(batchQuery).execute())
+          values = []
+        }
       })
-      executionPromises.push(client.query(batchQuery).execute())
-    }
+
+      queryStream.on('end', () => {
+        // Insert any remaining values
+        if (values.length > 0) {
+          const batchQuery = new BatchQuery({
+            text: 'INSERT INTO target_data (id, name) VALUES ($1, $2)',
+            values: values,
+          })
+          executionPromises.push(client.query(batchQuery).execute())
+        }
+        resolve()
+      })
+
+      queryStream.on('error', reject)
+    })
+
 
     await Promise.all(executionPromises)
 
