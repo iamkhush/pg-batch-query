@@ -17,6 +17,8 @@ $ yarn add pg-batch-query
 
 ## Usage
 
+### Javacript (CommonJs)
+
 ```javascript
 const pg = require('pg')
 const BatchQuery = require('pg-batch-query')
@@ -28,7 +30,7 @@ async function query() {
   try {
     const batch = new BatchQuery({
       name: 'optional',
-      text: 'SELECT from foo where bar = $1',
+      text: 'SELECT * from foo where bar = $1',
       values: [
         ['first'],
         ['second']
@@ -48,6 +50,51 @@ async function query() {
 
 query().catch(console.error)
 ```
+### TypeScript (ES Modules)
+
+```typescript
+import pg from 'pg'
+import BatchQuery from 'pg-batch-query'
+
+const pool = new pg.Pool()
+
+// Define row type
+interface User {
+  id: number
+  name: string
+  created_at: Date
+}
+
+async function query() {
+  const client = await pool.connect()
+  try {
+    const batch = new BatchQuery<User>({
+      name: 'fetch_users',
+      text: 'SELECT * from users where name = $1 and created_at = $2',
+      values: [
+        ['first', new Date()],
+        ['second', new Date()]
+      ]
+    })
+
+    const results = await client.query(batch).execute()
+
+    for ( const result of results ) {
+      for ( const row of result.rows ) {
+        console.log(`User: ${row.name}`, row)
+      }
+    }
+  } finally {
+    client.release()
+  }
+}
+
+query().catch(console.error)
+```
+
+### Supported Value types
+
+Batch Query accepts any javascript type that PostgreSQL supports, just like a regular pg query
 
 ## Testing
 

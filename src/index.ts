@@ -1,25 +1,26 @@
+import './global'
 import { Submittable, Connection, QueryResult, QueryResultRow } from 'pg'
 const Result = require('pg/lib/result.js')
 const utils = require('pg/lib/utils.js')
 let nextUniqueID = 1 // concept borrowed from org.postgresql.core.v3.QueryExecutorImpl
 
-interface BatchQueryConfig {
+interface BatchQueryConfig<V extends any[] = any[]> {
   name?: string
   text: string
-  values: string[][] | string[][][]
+  values: V[]
 }
 
-class BatchQuery<T extends QueryResultRow> implements Submittable {
+class BatchQuery<T extends QueryResultRow = any, V extends any[] = any[]> implements Submittable {
   name: string | null
   text: string
-  values: string[][] | string[][][]
+  values: V[]
   connection: Connection | null
   _portal: string | null
   _result: typeof Result | null
   _results: typeof Result[]
   callback: null | ((err: Error | null, rows: QueryResult<T>[] | null) => void)
 
-  constructor(batchQuery: BatchQueryConfig) {
+  constructor(batchQuery: BatchQueryConfig<V>) {
     const { name, values, text } = batchQuery
 
     this.name = name ?? null
@@ -31,8 +32,8 @@ class BatchQuery<T extends QueryResultRow> implements Submittable {
     this._results = []
     this.callback = null
 
-    for (const _ of values) {
-      if (!Array.isArray(values)) {
+    for (const valueSet of values) {
+      if (!Array.isArray(valueSet)) {
         throw new Error(
           'Batch commands require each set of values to be an array. e.g. values: any[][]'
         )
