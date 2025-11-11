@@ -1,6 +1,6 @@
 # Release Notes
 
-## v1.3.0
+## v1.3.1
 
 This release brings major improvements to the type system, bug fixes, and enhanced documentation.
 
