@@ -15,7 +15,7 @@ class BatchQuery<T extends QueryResultRow = any, V extends any[] = any[]> implem
   text: string
   values: V[]
   connection: Connection | null
-  _portal: string | null
+  _portals: (string | null)[]
   _result: typeof Result | null
   _results: typeof Result[]
   callback: null | ((err: Error | null, rows: QueryResult<T>[] | null) => void)
@@ -27,7 +27,7 @@ class BatchQuery<T extends QueryResultRow = any, V extends any[] = any[]> implem
     this.values = values
     this.text = text
     this.connection = null
-    this._portal = null
+    this._portals = []
     this._result = new Result()
     this._results = []
     this.callback = null
@@ -55,12 +55,13 @@ class BatchQuery<T extends QueryResultRow = any, V extends any[] = any[]> implem
     )
 
     this.values.map((val) => {
-      this._portal = 'C_' + nextUniqueID++
+      const portal = 'C_' + nextUniqueID++
+      this._portals.push(portal)
       connection.bind(
         {
           statement: this.name ?? '',
           values: val,
-          portal: this._portal,
+          portal,
           valueMapper: utils.prepareValue,
         },
         true
@@ -70,12 +71,12 @@ class BatchQuery<T extends QueryResultRow = any, V extends any[] = any[]> implem
       connection.describe(
         {
           type: 'P',
-          name: this._portal,
+          name: portal,
         },
         true
       )
 
-      connection.execute({ portal: this._portal }, true)
+      connection.execute({ portal }, true)
     })
 
     this.connection.sync()
@@ -119,7 +120,10 @@ class BatchQuery<T extends QueryResultRow = any, V extends any[] = any[]> implem
     this._result.addCommandComplete(msg)
     this._results.push(this._result)
     this._result = new Result()
-    this.connection?.close({ type: 'P', name: this._portal ?? '' }, true)
+    const portal = this._portals.shift()
+    if (portal) {
+      this.connection?.close({ type: 'P', name: portal }, true)
+    }
   }
 
   handleEmptyQuery() {
