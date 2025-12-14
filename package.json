@@ -1,5 +1,5 @@
 {
-  "name": "pg-batch-query",
+  "name": "@iamkhush/pg-batch-query",
   "version": "1.4.0",
   "description": "Postgres Batch Query for performant response time.",
   "main": "./dist/index.js",
@@ -27,6 +27,9 @@
   "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/iamkhush/pg-batch-query/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",

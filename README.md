@@ -12,7 +12,7 @@ As [per benchmark tests](./bench.ts), number of queries per seconds gets tripled
 
 ```bash
 $ yarn add pg
-$ yarn add pg-batch-query
+$ yarn add @iamkhush/pg-batch-query
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ $ yarn add pg-batch-query
 
 ```javascript
 const pg = require('pg')
-const BatchQuery = require('pg-batch-query')
+const BatchQuery = require('@iamkhush/pg-batch-query')
 
 const pool = new pg.Pool()
 
@@ -54,7 +54,7 @@ query().catch(console.error)
 
 ```typescript
 import pg from 'pg'
-import BatchQuery from 'pg-batch-query'
+import BatchQuery from '@iamkhush/pg-batch-query'
 
 const pool = new pg.Pool()
 
