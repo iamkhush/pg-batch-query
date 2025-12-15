@@ -51,7 +51,7 @@ jobs:
             OTP: 
               name: 'OTP to publish package'
               description: 'OTP from authenticator app'
-      - run: yarn publish --otp ${{ steps.wait-for-secrets.outputs.OTP }}
+      - run: npm publish --otp ${{ steps.wait-for-secrets.outputs.OTP }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
