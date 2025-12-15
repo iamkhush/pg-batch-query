@@ -85,7 +85,7 @@ class BatchQuery<T extends QueryResultRow = any, V extends any[] = any[]> implem
   public execute(): Promise<QueryResult<T>[]> {
     return new Promise((resolve, reject) => {
       this.callback = (err: Error | null, rows: QueryResult<T>[] | null = null) =>
-        err ? reject(err) : rows ? resolve(rows) : []
+        err ? reject(err) : resolve(rows ?? [])
     })
   }
 
