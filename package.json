@@ -1,6 +1,6 @@
 {
   "name": "pg-batch-query",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Postgres Batch Query for performant response time.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

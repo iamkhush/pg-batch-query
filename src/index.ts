@@ -82,7 +82,20 @@ class BatchQuery<T extends QueryResultRow = any, V extends any[] = any[]> implem
     this.connection.sync()
   }
 
+  /**
+   * Submits the batch query for execution.
+   * 
+   * @remarks
+   * This method initiates the query execution process and returns a promise that resolves
+   * with the query results.
+   * 
+   * @throws Error if execute() is called more than once on the same instance.
+   * @returns A promise resolving to an array of QueryResult objects.
+   */
   public execute(): Promise<QueryResult<T>[]> {
+    if (this.callback) {
+      throw new Error('BatchQuery.execute() can only be called once per instance.')
+    }
     return new Promise((resolve, reject) => {
       this.callback = (err: Error | null, rows: QueryResult<T>[] | null = null) =>
         err ? reject(err) : resolve(rows ?? [])
@@ -99,11 +112,7 @@ class BatchQuery<T extends QueryResultRow = any, V extends any[] = any[]> implem
   handleReadyForQuery() {
     if (this.callback) {
       // eslint-disable-next-line no-useless-catch
-      try {
-        this.callback(null, this._results)
-      } catch (err) {
-        throw err
-      }
+      this.callback(null, this._results)
     }
   }
 

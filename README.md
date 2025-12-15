@@ -96,6 +96,9 @@ query().catch(console.error)
 
 Batch Query accepts any javascript type that PostgreSQL supports, just like a regular pg query
 
+**Important**: `BatchQuery` instances are stateful and designed for single use. You must create a new instance for every execution. Calling `.execute()` more than once on the same instance will throw an error.
+
+
 ## Testing
 
 To run the tests, you will need to create a `.env` file in the root of the project and add the following environment variables:

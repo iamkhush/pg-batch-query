@@ -23,4 +23,10 @@ describe('Regression: BatchQuery Promise Hang', () => {
 
         expect(result).toEqual([]);
     });
+
+    it('should throw error if execute() is called twice', async () => {
+        const q = new BatchQuery({ text: 'SELECT 1', values: [] });
+        q.execute(); // First call OK
+        expect(() => q.execute()).toThrow('BatchQuery.execute() can only be called once per instance.');
+    });
 });

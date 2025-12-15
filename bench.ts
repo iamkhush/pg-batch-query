@@ -30,7 +30,7 @@ const batchExec = async (client, getQuery, count, queryCount = 5) => {
   }
 
   const batchQuery = new BatchQuery({
-    name: 'optional'+ counter++,
+    name: 'optional' + counter++,
     text: query.text,
     values
   })
@@ -41,7 +41,7 @@ const bench = async (client, mainMethod, q, time, queryCount = 5) => {
   let start = Date.now()
   let count = 0
   while (true) {
-    await mainMethod(client, q, count, queryCount = 5)
+    await mainMethod(client, q, count, queryCount)
     count++
     if (Date.now() - start > time) {
       return count
