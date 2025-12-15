@@ -14,6 +14,11 @@
     "type": "git",
     "url": "git@github.com:iamkhush/pg-batch-query.git"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "provenance": true
+  },
   "keywords": [
     "postgres",
     "batch-query",
