@@ -34,8 +34,8 @@ jobs:
         PGDATABASE: ci_db_test
         PGTESTNOSSL: 'true'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v4.2.0
+      - uses: actions/setup-node@v4.2.0
         with:
           node-version: '22'
           cache: yarn
