@@ -8,7 +8,7 @@
     "build": "rimraf dist && tsc",
     "test": "jest",
     "test:local": "node --env-file=.env ./node_modules/.bin/jest",
-    "increment-version": "npm version patch"
+    "increment-version": "npm version patch && node scripts/update-release-notes.js"
   },
   "repository": {
     "type": "git",
